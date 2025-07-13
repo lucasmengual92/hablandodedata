@@ -11,7 +11,8 @@ hablandodedata/
     ├── README.md
     ├── databricks.yml
     ├── notebooks/
-    │   └── analisis_nyctaxi.py
+    │   └── tutorials/
+    │       └── 0_analisis_nyctaxi.py
     └── workflows/
         └── workflow_analisis_nyctaxi.yml
 ```
