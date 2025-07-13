@@ -1,0 +1,9 @@
+# Ejemplo de workflow para Databricks Asset Bundles
+
+workflow:
+  name: ejemplo_workflow
+  tasks:
+    - name: tarea_notebook
+      notebook_path: notebooks/tutorials/0_analisis_nyctaxi.py
+
+# Puedes agregar más tareas o dependencias aquí.
