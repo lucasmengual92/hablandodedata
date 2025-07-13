@@ -1,6 +1,6 @@
-# hablandodedata
+# Hablando De Data
 
-Bienvenido al repositorio **hablandodedata**. Este espacio acompaña los contenidos de [hablandodedata.substack.com](https://hablandodedata.substack.com/) sobre análisis de datos, machine learning y Databricks, todo en español.
+Bienvenido al repositorio **hablandodedata**. Este espacio acompaña los contenidos de [hablandodedata.substack.com](https://hablandodedata.substack.com/) sobre análisis de datos, machine learning, data engineering, Databricks y más! Ahh, y todo en español.
 
 ## Estructura
 
