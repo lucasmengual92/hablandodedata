@@ -5,7 +5,7 @@ Esta carpeta contiene recursos para usar Asset Bundles en Databricks.
 ## ¿Qué incluye?
 
 - **databricks.yml**: Configuración de bundle.
-- **notebooks/**: Ejemplo con el dataset `samples.nyctaxi.trips`.
+- **notebooks/tutorials/**: Ejemplo con el dataset `samples.nyctaxi.trips`.
 - **workflows/**: Ejemplo de workflow para ejecutar el análisis.
 
 ## Uso
