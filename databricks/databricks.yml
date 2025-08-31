@@ -1,5 +1,7 @@
 bundle:
   name: analisis_nyctaxi
+  include:
+  - resources/*.yml
   description: "Ejemplo de Asset Bundle para análisis de datos con Databricks usando el dataset de taxis de NYC."
   artifacts:
     notebooks:
