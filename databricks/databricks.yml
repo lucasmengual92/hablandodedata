@@ -1,10 +1,11 @@
 bundle:
   name: analisis_nyctaxi
-  include:
-  - resources/*.yml
-  description: "Ejemplo de Asset Bundle para análisis de datos con Databricks usando el dataset de taxis de NYC."
-  artifacts:
-    notebooks:
-      - path: notebooks/tutorials/0_analisis_nyctaxi.py
-    workflows:
-      - path: workflows/workflow_analisis_nyctaxi.yml
+
+resources:
+  jobs:
+    analisis_nyctaxi_job:
+      name: "Análisis de Datos: NYC Taxi"
+      tasks:
+        - task_key: "ejecutar_analisis"
+          notebook_task:
+            notebook_path: "notebooks/tutorials/0_analisis_nyctaxi.py"
