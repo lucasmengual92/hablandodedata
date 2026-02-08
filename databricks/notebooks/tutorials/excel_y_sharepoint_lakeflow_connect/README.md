@@ -17,7 +17,7 @@ La idea es simple: **dejar de exportar Excel a CSV**, dejar de bajar archivos �
   - ✅ Auto Loader en streaming continuo (si lo necesitás)
   - ✅ (Opcional) sketch de DLT
 
-📓 Notebook: `sharepoint_excel_lakeflow_connect.ipynb` *(o el nombre que le hayas puesto)*
+📓 Notebook: `sharepoint_excel_lakeflow_connect.ipynb`, este notebook de [**acá**](sharepoint_excel_lakeflow_connect.ipynb).
 
 ---
 
@@ -30,15 +30,15 @@ La idea es simple: **dejar de exportar Excel a CSV**, dejar de bajar archivos �
 
 ---
 
-## Paso 0 — Activar features (si aparecen como Preview)
+## Paso 0 — Activar features (o hasta que llegue como GA)
 
-En algunos workspaces estas features aparecen como “Preview” y se activan desde el panel de configuración/preview.
+En las workspaces que no sean del Databricks Free estas features aparecen como “Previews” y se activan desde el panel de configuración/preview:
 
-📸 Capturas sugeridas:
+📸 Se veran como lo siguiente:
 - Excel File Format Support:  
   ![Excel File Format Support](media/01_excel_file_format_support.png)
 
-- Lakeflow Connect for SharePoint:  
+- (Opcional) Lakeflow Connect para SharePoint:  
   ![Lakeflow Connect for SharePoint](media/02_lakeflow_connect_sharepoint.png)
 
 ---
@@ -63,7 +63,7 @@ Ejemplo típico (depende del caso):
 - `Sites.Read.All`
 - `Files.Read.All`
 
-📸 Captura sugerida:  
+📸 Por ejemplo para el M2M (machine-to-machine) seria lo siguiente:  
 ![Graph API Permissions](media/06_graph_api_permissions.png)
 
 > Recomendación: en producción, aplicá el mínimo privilegio posible y manejá secrets con un Secret Scope.
@@ -75,7 +75,7 @@ Ejemplo típico (depende del caso):
 En Databricks:
 `Catalog` → `Connections` → `Create connection` → **SharePoint**
 
-📸 Captura: dónde crear/gestionar conexiones  
+📸 Dónde crear/gestionar conexiones:
 ![Catalog manage connections](media/03_catalog_manage_connections.png)
 
 Luego completás:
@@ -84,7 +84,7 @@ Luego completás:
 - Domain
 - Tenant ID
 
-📸 Captura: autenticación  
+📸 Autenticación:  
 ![Connection authentication](media/04_connection_authentication.png)
 
 ---
@@ -95,8 +95,32 @@ Luego completás:
 
 ```python
 df = (spark.read
-  .format("excel")
-  .option("headerRows", 1)
-  .load("/Volumes/<catalog>/<schema>/<volume>/demo.xlsx")
-)
+           .format("excel")
+           .option("headerRows", 1)
+           .load("/Volumes/<catalog>/<schema>/<volume>/demo.xlsx")
+     )
+
 display(df)
+```
+
+### B) Excel directo desde SharePoint usando Lakeflow Connect
+
+Una vez creada la **Connection de SharePoint** en Databricks, podés leer archivos Excel directamente desde SharePoint **sin copiarlos previamente a un Volume**.
+
+La clave está en dos cosas:
+- usar el formato `excel`
+- referenciar la conexión con `databricks.connection`
+
+Ejemplo básico:
+
+```python
+df = (
+  spark.read
+       .format("excel")
+       .option("databricks.connection", "<NOMBRE_DE_LA_CONNECTION>")
+       .option("headerRows", 1)
+       .load("https://<TU_TENANT>.sharepoint.com/sites/<TU_SITE>/Shared%20Documents/<RUTA>/demo.xlsx")
+     )
+
+display(df)
+```
