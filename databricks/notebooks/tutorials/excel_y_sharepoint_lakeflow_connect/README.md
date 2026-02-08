@@ -17,7 +17,7 @@ La idea es simple: **dejar de exportar Excel a CSV**, dejar de bajar archivos �
   - ✅ Auto Loader en streaming continuo (si lo necesitás)
   - ✅ (Opcional) sketch de DLT
 
-📓 Notebook: `sharepoint_excel_lakeflow_connect.ipynb`, este notebook de [**acá**](sharepoint_excel_lakeflow_connect.ipynb).
+📓 Notebook: `excel_y_sharepoint_lakeflow_connect.ipynb`, este notebook de [**acá**](excel_y_sharepoint_lakeflow_connect.ipynb).
 
 ---
 
