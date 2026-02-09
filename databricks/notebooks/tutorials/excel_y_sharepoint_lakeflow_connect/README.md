@@ -124,3 +124,19 @@ df = (
 
 display(df)
 ```
+
+---
+
+## Archivo Excel de ejemplo
+
+Este tutorial incluye un archivo Excel de ejemplo (`demo_sales.xlsx`) con datos ficticios
+para que puedas probar rápidamente desde **Databricks Free Edition**.
+
+Ejemplo de uso:
+
+1) Subí `demo_sales.xlsx` a un Volume o File Store
+2) Actualizá la variable `LOCAL_EXCEL_PATH` en el notebook
+3) Ejecutá la sección **Opción A — Excel desde Volume**
+
+Las columnas son simples (ventas, fechas, montos) y están pensadas para demos y POCs.
+
