@@ -97,7 +97,7 @@ Luego completás:
 df = (spark.read
            .format("excel")
            .option("headerRows", 1)
-           .load("/Volumes/<catalog>/<schema>/<volume>/demo.xlsx")
+           .load("/Volumes/<catalog>/<schema>/<volume>/demo_sales.xlsx")
      )
 
 display(df)
@@ -119,7 +119,7 @@ df = (
        .format("excel")
        .option("databricks.connection", "<NOMBRE_DE_LA_CONNECTION>")
        .option("headerRows", 1)
-       .load("https://<TU_TENANT>.sharepoint.com/sites/<TU_SITE>/Shared%20Documents/<RUTA>/demo.xlsx")
+       .load("https://<TU_TENANT>.sharepoint.com/sites/<TU_SITE>/Shared%20Documents/<RUTA>/demo_sales.xlsx")
      )
 
 display(df)
