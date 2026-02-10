@@ -1,0 +1,36 @@
+
+# =====================================================
+# Reglas de Data Quality – Presupuesto Financiero
+# =====================================================
+
+- name: year_formato_valido
+  description: >
+    El año debe tener exactamente 4 dígitos (ej. 2026).
+    Evita errores de carga y problemas en agregaciones temporales.
+  criticality: error
+  check:
+    function: regex_match
+    arguments:
+      column: year
+      regex: "^[0-9]{4}$"
+
+- name: periodo_valido
+  description: >
+    El periodo debe representar un mes del año (1 a 12).
+  criticality: error
+  check:
+    function: is_in_range
+    arguments:
+      column: period
+      min_limit: 1
+      max_limit: 12
+
+- name: legal_entity_permitida
+  description: >
+    La entidad legal debe existir en la tabla maestra de entidades.
+  criticality: error
+  check:
+    function: is_in_list
+    arguments:
+      column: legal_entity
+      allowed: []
