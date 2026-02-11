@@ -1,41 +1,50 @@
-
 # Databricks notebook source
-# ============================================================
-# DATA QUALITY CON DQX SOBRE EXCEL DE PRESUPUESTO FINANCIERO
-# ============================================================
-#
-# Caso de uso:
-# Finanzas mantiene un Excel de presupuesto trimestral.
-# Queremos validar la calidad antes de consumirlo en BI.
-#
-# ============================================================
+# MAGIC %md
+# MAGIC
+# MAGIC # DATA QUALITY CON DQX
+# MAGIC
+# MAGIC **Caso de uso:**
+# MAGIC - Finanzas mantiene un Excel de presupuesto trimestral.
+# MAGIC - Queremos validar la calidad antes de consumirlo en BI.
+# MAGIC - Vamos a usar una feature (aun part de Databricks-Labs) que se llama DQX.
+# MAGIC   - Para crear reglas (aka expectations) para hacer Data quality sobre nuestro data object (aka datfarame del excel).
+# MAGIC
 
 # COMMAND ----------
-# 0. Imports necesarios (sin alias F)
 
-from pyspark.sql.functions import col, lower, regexp_replace, current_timestamp
+# Imports necesarios
+
+from pyspark.sql.functions import current_timestamp
 from databricks.labs.dqx.engine import DQEngine
+from databricks.sdk import WorkspaceClient
 import yaml
+import re
 
 # COMMAND ----------
-# 1. Funciones auxiliares reutilizables
+
+# Funciones auxiliares reutilizables
 
 def sanitize_columns(df):
-    new_cols = [regexp_replace(lower(c), "[^a-z0-9_]", "_") for c in df.columns]
+    new_cols = [
+        re.sub(r"[^a-z0-9_]", "_", c.strip().lower())
+        for c in df.columns
+    ]
     return df.toDF(*new_cols)
 
 # COMMAND ----------
-# 2. Configuración del demo
 
-BASE_PATH = "/Workspace/Repos/<TU_USUARIO>/hablandodedata/databricks/notebooks/tutorials/data_quality_con_dqx_excel_budget"
-EXCEL_PATH = f"{BASE_PATH}/Finance_Budget_Q1_2026.xlsx"
-RULES_PATH = f"{BASE_PATH}/budget_dqx_rules.yml"
+# Configuración del demo
 
-TARGET_TABLE = "hive_metastore.default.budget_silver"
-QUARANTINE_TABLE = "hive_metastore.default.budget_quarantine"
+BASE_PATH = "/Workspace/Repos/<TU_USUARIO>/hablandodedata/databricks/notebooks/tutorials/data_quality_con_dqx_excel_budget" # not used por ahora
+EXCEL_PATH = "/Volumes/hablando_de_data/demos/read_excel_finanzas/Finance_Budget_Q1_2026.xlsx"
+RULES_PATH = "/Volumes/hablando_de_data/demos/read_excel_finanzas/budget_dqx_rules.yml"
+
+TARGET_TABLE = "hablando_de_data.default.budget_bronze"
+QUARANTINE_TABLE = "hablando_de_data.default.budget_quarantine"
 
 # COMMAND ----------
-# 3. Lectura del Excel
+
+# Lectura del Excel y transformación de columnas
 
 df_raw = (
     spark.read.format("excel")
@@ -44,56 +53,74 @@ df_raw = (
     .load(EXCEL_PATH)
 )
 
-# COMMAND ----------
-# 4. Limpieza de nombres de columnas
-
 df_clean = sanitize_columns(df_raw)
 
+display(df_clean)
+
 # COMMAND ----------
-# 5. Tabla de referencia de entidades legales
 
-spark.sql("""
-CREATE OR REPLACE TEMP VIEW legal_entity_ref AS
-SELECT 'ES01' AS legal_entity UNION ALL
-SELECT 'NL01' UNION ALL
-SELECT 'CZ01'
-""")
+# Creando una tabla de referencia de entidades legales
 
+spark.sql(
+    """
+    CREATE OR REPLACE TEMP VIEW legal_entity_ref AS
+    SELECT 'ES01' AS legal_entity UNION ALL
+    SELECT 'NL01' UNION ALL
+    SELECT 'CZ01'
+    """
+    )
+
+# creamos una lista con esas entidades permitidas/legales
 allowed_entities = [r.legal_entity for r in spark.table("legal_entity_ref").collect()]
 
+print(allowed_entities)
+
 # COMMAND ----------
-# 6. Carga de reglas desde YAML
+
+# Cargando las reglas desde YAML
 
 with open(RULES_PATH, "r") as f:
     checks = yaml.safe_load(f)
 
+#allowed_entities = 'DtMF'
+# Llenamos la regla de 'legal_entity_permitida' a partir de la lista de entidades permitidas
 for c in checks:
     if c["name"] == "legal_entity_permitida":
         c["check"]["arguments"]["allowed"] = allowed_entities
 
-# COMMAND ----------
-# 7. Aplicación de Data Quality con DQX
+checks
 
-dq_engine = DQEngine()
-valid_df, quarantined_df = dq_engine.apply_checks_by_metadata_and_split(
-    df_clean, checks
+# COMMAND ----------
+
+# Validamos las reglas (opcional)
+
+status = DQEngine.validate_checks(checks)
+if getattr(status, "has_errors", False):
+    raise ValueError(f"DQX checks validation failed: {status}")
+
+# COMMAND ----------
+
+# Aplicación de Data Quality con DQX
+
+dq_engine = DQEngine(WorkspaceClient())
+valid_df, quarantined_df = dq_engine.apply_checks_by_metadata_and_split(df_clean, checks)
+
+# COMMAND ----------
+
+# Escritura de los resultados
+
+(valid_df.write.format("delta").mode("overwrite").saveAsTable(TARGET_TABLE))
+
+(
+    quarantined_df.withColumn("_quarantine_ts", current_timestamp())
+    .write.format("delta")
+    .mode("overwrite")
+    .saveAsTable(QUARANTINE_TABLE)
 )
 
 # COMMAND ----------
-# 8. Escritura de resultados
 
-(valid_df.write.format("delta")
- .mode("overwrite")
- .saveAsTable(TARGET_TABLE))
-
-(quarantined_df
- .withColumn("_quarantine_ts", current_timestamp())
- .write.format("delta")
- .mode("overwrite")
- .saveAsTable(QUARANTINE_TABLE))
-
-# COMMAND ----------
-# 9. Resultado final
+# Resultado final
 
 display(valid_df)
 display(quarantined_df)
