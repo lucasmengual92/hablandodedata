@@ -7,7 +7,7 @@
 # MAGIC - Finanzas mantiene un Excel de presupuesto trimestral.
 # MAGIC - Queremos validar la calidad antes de consumirlo en BI.
 # MAGIC - Vamos a usar una feature (aun part de Databricks-Labs) que se llama DQX.
-# MAGIC   - Para crear reglas (aka expectations) para hacer Data quality sobre nuestro data object (aka datfarame del excel).
+# MAGIC   - Para crear reglas (aka expectations) para hacer Data quality sobre nuestro data object (aka dataframe del excel).
 # MAGIC
 
 # COMMAND ----------
