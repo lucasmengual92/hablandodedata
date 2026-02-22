@@ -24,6 +24,14 @@ hablandodedata/
     │           └── demo_sales.xlsx
     └── workflows/
         └── workflow_analisis_nyctaxi.yml
+└── src/
+    └── media/
+        └── 01_excel_file_format_support.png
+        └── 02_lakeflow_connect_sharepoint.png
+        └── 03_catalog_manage_connections.png
+        └── 04_connection_authentication.png
+        └── 05_sharepoint_site_id.png
+        └── 06_graph_api_permissions.png
 ```
 
 ## Enlaces
