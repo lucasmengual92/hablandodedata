@@ -36,10 +36,10 @@ En las workspaces que no sean del Databricks Free estas features aparecen como �
 
 📸 Se veran como lo siguiente:
 - Excel File Format Support:  
-  ![Excel File Format Support](media/01_excel_file_format_support.png)
+  ![Excel File Format Support](../../../../src/media/01_excel_file_format_support.png)
 
 - (Opcional) Lakeflow Connect para SharePoint:  
-  ![Lakeflow Connect for SharePoint](media/02_lakeflow_connect_sharepoint.png)
+  ![Lakeflow Connect for SharePoint](../../../../src/media/02_lakeflow_connect_sharepoint.png)
 
 ---
 
@@ -49,7 +49,7 @@ Dependiendo del setup, es común necesitar el identificador del sitio (Site ID).
 Una forma práctica es abrir el endpoint que expone el `id` y copiarlo.
 
 📸 Captura sugerida:  
-![SharePoint Site ID](media/05_sharepoint_site_id.png)
+![SharePoint Site ID](../../../../src/media/05_sharepoint_site_id.png)
 
 > Tip: guardate el Site ID porque después lo vas a usar en permisos o validaciones.
 
@@ -64,7 +64,7 @@ Ejemplo típico (depende del caso):
 - `Files.Read.All`
 
 📸 Por ejemplo para el M2M (machine-to-machine) seria lo siguiente:  
-![Graph API Permissions](media/06_graph_api_permissions.png)
+![Graph API Permissions](../../../../src/media/06_graph_api_permissions.png)
 
 > Recomendación: en producción, aplicá el mínimo privilegio posible y manejá secrets con un Secret Scope.
 
@@ -76,7 +76,7 @@ En Databricks:
 `Catalog` → `Connections` → `Create connection` → **SharePoint**
 
 📸 Dónde crear/gestionar conexiones:
-![Catalog manage connections](media/03_catalog_manage_connections.png)
+![Catalog manage connections](../../../../src/media/03_catalog_manage_connections.png)
 
 Luego completás:
 - Client ID
@@ -85,7 +85,7 @@ Luego completás:
 - Tenant ID
 
 📸 Autenticación:  
-![Connection authentication](media/04_connection_authentication.png)
+![Connection authentication](../../../../src/media/04_connection_authentication.png)
 
 ---
 
