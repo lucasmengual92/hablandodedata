@@ -13,7 +13,15 @@ hablandodedata/
     ├── notebooks/
     │   └── tutorials/
     │       └── 0_analisis_nyctaxi.py
-    │       └── 1_excel_sharepoint_connector.py    
+    │       └── data_quality_con_dqx_excel_budget/
+    │           └── README.md
+    │           └── tutorial_dqx_excel_budget.py
+    │           └── budget_dqx_rules.yml
+    │           └── Finance_Budget_Q1_2026.xlsx
+    │       └── excel_y_sharepoint_lakeflow_connect/
+    │           └── README.md
+    │           └── excel_y_sharepoint_lakeflow_connect.ipynb
+    │           └── demo_sales.xlsx
     └── workflows/
         └── workflow_analisis_nyctaxi.yml
 ```
