@@ -2,6 +2,8 @@
 
 Bienvenido al repositorio **hablandodedata**. Este espacio acompaña los contenidos de [hablandodedata.substack.com](https://hablandodedata.substack.com/) sobre análisis de datos, machine learning, data engineering, Databricks y más! Ahh, y todo en español.
 
+------------------------------------------------------------------------
+
 ## Estructura
 
 ```bash
@@ -34,9 +36,31 @@ hablandodedata/
         └── 06_graph_api_permissions.png
 ```
 
-## Enlaces
+------------------------------------------------------------------------
 
-- Substack: [hablandodedata.substack.com](https://hablandodedata.substack.com/)
-- LinkedIn: [Lucas Mengual](https://www.linkedin.com/in/lucasmengual/)
+## 🤝 Contribuciones
+
+Si querés extender el ejemplo:
+
+-   Agregar más reglas\
+-   Incorporar métricas de observabilidad\
+-   Integrarlo con Jobs o Workflows\
+-   Adaptarlo a otros dominios (ventas, HR, supply)
+
+Pull requests son bienvenidos.
+
+------------------------------------------------------------------------
+
+## 📬 Sobre Hablando de Data
+
+Contenido práctico sobre:
+
+-   Databricks\
+-   Data Engineering\
+-   Analytics Engineering\
+-   Gobernanza\
+-   Data Quality real en producción
+
+👉 https://hablandodedata.substack.com
 
 ---
