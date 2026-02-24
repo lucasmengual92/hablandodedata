@@ -12,6 +12,15 @@
 
 # COMMAND ----------
 
+# DBTITLE 1,Cell 2
+# Pip install
+# Tip for Databricks, include the databricks-labs-dqx library in Serverless Environment 5 :)
+# Tip para Databricks, incluir la libreria de databricks-labs-dqx en el Environment 5 de Serverless :)
+%pip install --quiet databricks-labs-dqx==0.8.0
+%restart_python
+
+# COMMAND ----------
+
 # Imports necesarios
 
 from pyspark.sql.functions import current_timestamp
