@@ -24,6 +24,9 @@ hablandodedata/
     │           └── README.md
     │           └── excel_y_sharepoint_lakeflow_connect.ipynb
     │           └── demo_sales.xlsx
+    │       └── lakeflow_jobs_orchestration_data_governance/
+    │           └── README.md
+    │           └── permisos_prod.py
     └── workflows/
         └── workflow_analisis_nyctaxi.yml
 └── src/
