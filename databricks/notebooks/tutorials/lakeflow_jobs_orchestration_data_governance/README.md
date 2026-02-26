@@ -104,19 +104,6 @@ Este patrón es clave cuando:
 
 ------------------------------------------------------------------------
 
-## 🔎 Relación con otros módulos
-
-Este ejemplo complementa:
-
--   Data Quality con DQX
--   Orquestación con Lakeflow Jobs
--   Excel como input gobernado
--   Separación Silver / Quarantine
-
-Primero aseguramos calidad. Luego aseguramos gobernanza.
-
-------------------------------------------------------------------------
-
 ## 🧠 Filosofía
 
 La gobernanza no es burocracia. Es arquitectura aplicada.
@@ -128,16 +115,4 @@ Los permisos bien diseñados evitan:
 -   Dependencias frágiles
 -   Problemas de auditoría
 
-------------------------------------------------------------------------
 
-## 📬 Hablando de Data
-
-Contenido práctico sobre:
-
--   Databricks
--   Unity Catalog
--   Gobernanza real
--   Data Quality en producción
--   Arquitectura Lakehouse
-
-👉 https://hablandodedata.substack.com
