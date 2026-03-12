@@ -58,7 +58,7 @@ hablandodedata/
         └── 06_graph_api_permissions.png
         └── 07_identity_and_access_groups.png
         └── 08_genie_code_intro.png
-        └── 09_genie_code_insight.png
+        └── 09_genie_code_insights.png
         └── 10_genie_code_ml.png
         └── 11_genie_code_instructions.png                
 ```
