@@ -1,17 +1,22 @@
-# Análisis básico del dataset 'samples.nyctaxi.trips'
+# Databricks notebook source
+# MAGIC %md
+# MAGIC # Análisis básico del dataset
+# MAGIC `samples.nyctaxi.trips`
 
 # COMMAND ----------
+
 # Cargar el dataset de ejemplo
 df = spark.read.table("samples.nyctaxi.trips")
 
-# Mostrar las primeras filas
 display(df.limit(10))
 
 # COMMAND ----------
+
 # Descripción del esquema
 df.printSchema()
 
 # COMMAND ----------
+
 # Estadísticas descriptivas de las columnas principales
 columnas = [
     "trip_distance",
@@ -23,6 +28,7 @@ columnas = [
 df.select(columnas).describe().show()
 
 # COMMAND ----------
+
 # Distribución de la distancia de viaje
 import matplotlib.pyplot as plt
 
@@ -34,6 +40,7 @@ plt.ylabel("Cantidad de viajes")
 plt.show()
 
 # COMMAND ----------
+
 # Viajes por código postal de pickup
 pickup_counts = (
     df.groupBy("pickup_zip")
@@ -43,5 +50,6 @@ pickup_counts = (
 display(pickup_counts)
 
 # COMMAND ----------
+
 # Conclusiones
 print("Personaliza este notebook para tus propios experimentos!")
