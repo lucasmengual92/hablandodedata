@@ -52,6 +52,14 @@
 
 # COMMAND ----------
 
+# MAGIC %md
+# MAGIC
+# MAGIC Como ejemplo, nosotros tenemos un grupo ya creado con el nombre `finance_business_users_gl_prod`.
+# MAGIC
+# MAGIC ![Identity and Access Groups](../../../../src/media/07_identity_and_access_groups.png)
+
+# COMMAND ----------
+
 # MAGIC %sql
 # MAGIC GRANT USE CATALOG ON CATALOG hablando_de_data TO `finance_business_users_gl_prod`;
 # MAGIC GRANT USE SCHEMA ON SCHEMA hablando_de_data.default TO `finance_business_users_gl_prod`;

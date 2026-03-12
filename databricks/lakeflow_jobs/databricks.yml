@@ -1,0 +1,5 @@
+bundle:
+  name: lakeflow_jobs
+
+include:
+  - workflow_analisis_nyctaxi.yml
