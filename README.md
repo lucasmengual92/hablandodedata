@@ -29,6 +29,9 @@ hablandodedata/
     ├── databricks.yml
     ├── notebooks/
     │   └── tutorials/
+    │       └── autocdc_end_to_end/
+    │           └── README.md
+    │           └── AutoCDC_Tutorial.ipynb
     │       └── data_quality_con_dqx_excel_budget/
     │           └── README.md
     │           └── tutorial_dqx_excel_budget.py
