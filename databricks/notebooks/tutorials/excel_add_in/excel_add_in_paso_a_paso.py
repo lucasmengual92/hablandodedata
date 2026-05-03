@@ -27,65 +27,50 @@
 
 # COMMAND ----------
 
-from pyspark.sql import Row
-from pyspark.sql.functions import col, round
-
-catalog = "hablando_de_data"
-schema = "default"
-table_name = "excel_add_in_sales_demo"
-
-full_table_name = f"{catalog}.{schema}.{table_name}"
-
-data = [
-    Row(order_id=1, order_date="2026-01-05", country="Netherlands", category="Candy", customer_segment="Retail", quantity=120, unit_price=1.25, discount=0.05),
-    Row(order_id=2, order_date="2026-01-08", country="Spain", category="Gum", customer_segment="Wholesale", quantity=300, unit_price=0.80, discount=0.10),
-    Row(order_id=3, order_date="2026-01-12", country="Italy", category="Chocolate", customer_segment="Retail", quantity=180, unit_price=1.60, discount=0.00),
-    Row(order_id=4, order_date="2026-02-03", country="Germany", category="Candy", customer_segment="Retail", quantity=220, unit_price=1.15, discount=0.07),
-    Row(order_id=5, order_date="2026-02-11", country="Netherlands", category="Gum", customer_segment="Online", quantity=140, unit_price=0.95, discount=0.03),
-    Row(order_id=6, order_date="2026-02-18", country="France", category="Chocolate", customer_segment="Wholesale", quantity=260, unit_price=1.45, discount=0.12),
-    Row(order_id=7, order_date="2026-03-02", country="Spain", category="Candy", customer_segment="Online", quantity=90, unit_price=1.30, discount=0.02),
-    Row(order_id=8, order_date="2026-03-09", country="Italy", category="Gum", customer_segment="Retail", quantity=400, unit_price=0.75, discount=0.08),
-]
-
-df = spark.createDataFrame(data)
-
-df = df.withColumn(
-    "total_amount",
-    round(col("quantity") * col("unit_price") * (1 - col("discount")), 2)
-)
-
-display(df)
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC ## 2. Guardar la tabla como Delta table
+# DBTITLE 1,Cell 3
+# MAGIC %sql
+# MAGIC -- Crear schema si no existe
+# MAGIC CREATE SCHEMA IF NOT EXISTS hablando_de_data.default;
 # MAGIC
-# MAGIC Esta tabla será la que después vamos a consumir desde Excel usando el add-in.
+# MAGIC -- Crear y cargar la tabla demo
+# MAGIC CREATE OR REPLACE TABLE hablando_de_data.default.excel_add_in_sales_demo (
+# MAGIC   order_id INT,
+# MAGIC   order_date DATE,
+# MAGIC   country STRING,
+# MAGIC   category STRING,
+# MAGIC   customer_segment STRING,
+# MAGIC   quantity INT,
+# MAGIC   unit_price DECIMAL(10,2),
+# MAGIC   discount DECIMAL(5,2),
+# MAGIC   total_amount DECIMAL(10,2)
+# MAGIC );
+# MAGIC
+# MAGIC INSERT INTO hablando_de_data.default.excel_add_in_sales_demo VALUES
+# MAGIC   (1, '2026-01-05', 'Netherlands', 'Candy', 'Retail', 120, 1.25, 0.05, ROUND(120 * 1.25 * (1 - 0.05), 2)),
+# MAGIC   (2, '2026-01-08', 'Spain', 'Gum', 'Wholesale', 300, 0.80, 0.10, ROUND(300 * 0.80 * (1 - 0.10), 2)),
+# MAGIC   (3, '2026-01-12', 'Italy', 'Chocolate', 'Retail', 180, 1.60, 0.00, ROUND(180 * 1.60 * (1 - 0.00), 2)),
+# MAGIC   (4, '2026-02-03', 'Germany', 'Candy', 'Retail', 220, 1.15, 0.07, ROUND(220 * 1.15 * (1 - 0.07), 2)),
+# MAGIC   (5, '2026-02-11', 'Netherlands', 'Gum', 'Online', 140, 0.95, 0.03, ROUND(140 * 0.95 * (1 - 0.03), 2)),
+# MAGIC   (6, '2026-02-18', 'France', 'Chocolate', 'Wholesale', 260, 1.45, 0.12, ROUND(260 * 1.45 * (1 - 0.12), 2)),
+# MAGIC   (7, '2026-03-02', 'Spain', 'Candy', 'Online', 90, 1.30, 0.02, ROUND(90 * 1.30 * (1 - 0.02), 2)),
+# MAGIC   (8, '2026-03-09', 'Italy', 'Gum', 'Retail', 400, 0.75, 0.08, ROUND(400 * 0.75 * (1 - 0.08), 2));
+# MAGIC
+# MAGIC -- Mostrar los datos insertados
+# MAGIC SELECT * FROM hablando_de_data.default.excel_add_in_sales_demo;
 
 # COMMAND ----------
 
-spark.sql(f"CREATE SCHEMA IF NOT EXISTS {catalog}.{schema}")
-
-(
-    df.write
-    .mode("overwrite")
-    .option("overwriteSchema", "true")
-    .saveAsTable(full_table_name)
-)
-
-print(f"Tabla creada: {full_table_name}")
-
-# COMMAND ----------
-
+# DBTITLE 1,Cell 4
 # MAGIC %md
-# MAGIC ## 3. Validar la tabla
+# MAGIC ## 2. Validar la tabla
 # MAGIC
 # MAGIC Antes de ir a Excel, validamos que la tabla exista y que se pueda consultar desde Databricks.
 
 # COMMAND ----------
 
-display(spark.table(full_table_name))
+# DBTITLE 1,Cell 7
+# MAGIC %sql
+# MAGIC SELECT * FROM hablando_de_data.default.excel_add_in_sales_demo;
 
 # COMMAND ----------
 
@@ -101,8 +86,9 @@ display(spark.table(full_table_name))
 
 # COMMAND ----------
 
+# DBTITLE 1,Cell 9
 # MAGIC %md
-# MAGIC ## 4. Queries para probar desde Excel
+# MAGIC ## 3. Queries para probar desde Excel
 # MAGIC
 # MAGIC Una vez instalado el Excel Add-in, podés copiar estas queries desde Excel usando la opción de escribir SQL.
 
@@ -166,8 +152,9 @@ display(spark.table(full_table_name))
 
 # COMMAND ----------
 
+# DBTITLE 1,Cell 13
 # MAGIC %md
-# MAGIC ## 5. Qué sigue en Excel
+# MAGIC ## 4. Qué sigue en Excel
 # MAGIC
 # MAGIC A partir de acá, el tutorial continúa en Excel.
 # MAGIC
@@ -191,8 +178,9 @@ display(spark.table(full_table_name))
 
 # COMMAND ----------
 
+# DBTITLE 1,Cell 14
 # MAGIC %md
-# MAGIC ## 6. Mensaje clave
+# MAGIC ## 5. Mensaje clave
 # MAGIC
 # MAGIC Excel sigue vivo.
 # MAGIC
