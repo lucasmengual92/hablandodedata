@@ -1,24 +1,40 @@
 # Databricks notebook source
+# MAGIC %md
+# MAGIC # Azure Databricks Excel Add-in - Paso a paso
+# MAGIC
+# MAGIC En este tutorial vamos a preparar una tabla demo en Databricks para probar el **Azure Databricks Excel Add-in**.
+# MAGIC
+# MAGIC La parte interesante no es solo conectar Excel con Databricks.
+# MAGIC
+# MAGIC La parte interesante es que Excel puede consumir datos gobernados desde Unity Catalog, sin exportar CSVs manualmente.
 
 # COMMAND ----------
-# MAGIC %md
-# MAGIC # Azure Databricks Excel Add-in - paso a paso
-# MAGIC
-# MAGIC En este tutorial vamos a preparar una tabla demo en Databricks
-# MAGIC y luego usarla desde Excel con el Azure Databricks Excel Add-in.
-# MAGIC
-# MAGIC El objetivo no es reemplazar Excel.
-# MAGIC
-# MAGIC El objetivo es conectar Excel a datos gobernados en Databricks.
 
-# COMMAND ----------
 # MAGIC %md
-# MAGIC ## 1. Crear datos demo
+# MAGIC ## 1. Crear una tabla demo en Unity Catalog
+# MAGIC
+# MAGIC En mi caso voy a usar el catálogo:
+# MAGIC
+# MAGIC `hablando_de_data`
+# MAGIC
+# MAGIC y el schema:
+# MAGIC
+# MAGIC `default`
+# MAGIC
+# MAGIC La tabla final será:
+# MAGIC
+# MAGIC `hablando_de_data.default.excel_add_in_sales_demo`
 
 # COMMAND ----------
 
 from pyspark.sql import Row
 from pyspark.sql.functions import col, round
+
+catalog = "hablando_de_data"
+schema = "default"
+table_name = "excel_add_in_sales_demo"
+
+full_table_name = f"{catalog}.{schema}.{table_name}"
 
 data = [
     Row(order_id=1, order_date="2026-01-05", country="Netherlands", category="Candy", customer_segment="Retail", quantity=120, unit_price=1.25, discount=0.05),
@@ -41,16 +57,13 @@ df = df.withColumn(
 display(df)
 
 # COMMAND ----------
+
 # MAGIC %md
-# MAGIC ## 2. Guardar como tabla Delta
+# MAGIC ## 2. Guardar la tabla como Delta table
 # MAGIC
-# MAGIC Cambiá el catálogo/esquema si querés usar otro path.
+# MAGIC Esta tabla será la que después vamos a consumir desde Excel usando el add-in.
 
 # COMMAND ----------
-
-catalog = "workspace"
-schema = "default"
-table_name = "excel_add_in_sales_demo"
 
 spark.sql(f"CREATE SCHEMA IF NOT EXISTS {catalog}.{schema}")
 
@@ -58,14 +71,21 @@ spark.sql(f"CREATE SCHEMA IF NOT EXISTS {catalog}.{schema}")
     df.write
     .mode("overwrite")
     .option("overwriteSchema", "true")
-    .saveAsTable(f"{catalog}.{schema}.{table_name}")
+    .saveAsTable(full_table_name)
 )
 
-print(f"Tabla creada: {catalog}.{schema}.{table_name}")
+print(f"Tabla creada: {full_table_name}")
 
 # COMMAND ----------
+
 # MAGIC %md
-# MAGIC ## 3. Query simple para probar desde Excel
+# MAGIC ## 3. Validar la tabla
+# MAGIC
+# MAGIC Antes de ir a Excel, validamos que la tabla exista y que se pueda consultar desde Databricks.
+
+# COMMAND ----------
+
+display(spark.table(full_table_name))
 
 # COMMAND ----------
 
@@ -75,17 +95,39 @@ print(f"Tabla creada: {catalog}.{schema}.{table_name}")
 # MAGIC   category,
 # MAGIC   SUM(total_amount) AS sales_amount,
 # MAGIC   SUM(quantity) AS total_quantity
-# MAGIC FROM workspace.default.excel_add_in_sales_demo
+# MAGIC FROM hablando_de_data.default.excel_add_in_sales_demo
 # MAGIC GROUP BY country, category
 # MAGIC ORDER BY sales_amount DESC;
 
 # COMMAND ----------
+
 # MAGIC %md
-# MAGIC ## 4. Query mensual para Pivot Tables
+# MAGIC ## 4. Queries para probar desde Excel
+# MAGIC
+# MAGIC Una vez instalado el Excel Add-in, podés copiar estas queries desde Excel usando la opción de escribir SQL.
 
 # COMMAND ----------
 
-# MAGIC %sql
+# MAGIC %md
+# MAGIC ### Query 1 - Ventas por país y categoría
+# MAGIC
+# MAGIC ```sql
+# MAGIC SELECT
+# MAGIC   country,
+# MAGIC   category,
+# MAGIC   SUM(total_amount) AS sales_amount,
+# MAGIC   SUM(quantity) AS total_quantity
+# MAGIC FROM hablando_de_data.default.excel_add_in_sales_demo
+# MAGIC GROUP BY country, category
+# MAGIC ORDER BY sales_amount DESC;
+# MAGIC ```
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ### Query 2 - Ventas mensuales para Pivot Tables
+# MAGIC
+# MAGIC ```sql
 # MAGIC SELECT
 # MAGIC   date_trunc('month', CAST(order_date AS DATE)) AS sales_month,
 # MAGIC   country,
@@ -93,28 +135,71 @@ print(f"Tabla creada: {catalog}.{schema}.{table_name}")
 # MAGIC   customer_segment,
 # MAGIC   SUM(total_amount) AS sales_amount,
 # MAGIC   SUM(quantity) AS total_quantity
-# MAGIC FROM workspace.default.excel_add_in_sales_demo
+# MAGIC FROM hablando_de_data.default.excel_add_in_sales_demo
 # MAGIC GROUP BY
 # MAGIC   date_trunc('month', CAST(order_date AS DATE)),
 # MAGIC   country,
 # MAGIC   category,
 # MAGIC   customer_segment
 # MAGIC ORDER BY sales_month, country, category;
+# MAGIC ```
 
 # COMMAND ----------
+
 # MAGIC %md
-# MAGIC ## 5. Checklist de capturas para el post
+# MAGIC ### Query 3 - Detalle completo para importar en Excel
 # MAGIC
-# MAGIC Guardar las imágenes en:
+# MAGIC ```sql
+# MAGIC SELECT
+# MAGIC   order_id,
+# MAGIC   CAST(order_date AS DATE) AS order_date,
+# MAGIC   country,
+# MAGIC   category,
+# MAGIC   customer_segment,
+# MAGIC   quantity,
+# MAGIC   unit_price,
+# MAGIC   discount,
+# MAGIC   total_amount
+# MAGIC FROM hablando_de_data.default.excel_add_in_sales_demo
+# MAGIC ORDER BY order_date, order_id;
+# MAGIC ```
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ## 5. Qué sigue en Excel
 # MAGIC
-# MAGIC `databricks/notebooks/tutorials/excel_add_in/images/`
+# MAGIC A partir de acá, el tutorial continúa en Excel.
 # MAGIC
-# MAGIC Sugerencia:
+# MAGIC El flujo sería:
 # MAGIC
-# MAGIC - `01_excel_add_in_install.png`
-# MAGIC - `02_connect_to_databricks.png`
-# MAGIC - `03_browse_tables.png`
-# MAGIC - `04_import_table_to_excel.png`
-# MAGIC - `05_run_sql_query.png`
-# MAGIC - `06_create_pivot_table.png`
-# MAGIC - `07_refresh_data.png`
+# MAGIC 1. Instalar el Azure Databricks Excel Add-in.
+# MAGIC 2. Conectarlo con tu workspace de Azure Databricks.
+# MAGIC 3. Seleccionar un SQL Warehouse.
+# MAGIC 4. Buscar la tabla:
+# MAGIC
+# MAGIC `hablando_de_data.default.excel_add_in_sales_demo`
+# MAGIC
+# MAGIC 5. Importar la tabla directamente en Excel.
+# MAGIC 6. Probar una query SQL desde Excel.
+# MAGIC 7. Crear una Pivot Table.
+# MAGIC 8. Refrescar los datos desde el add-in.
+# MAGIC
+# MAGIC La idea no es reemplazar Excel.
+# MAGIC
+# MAGIC La idea es dejar de exportar CSVs manualmente y empezar a consumir datos gobernados desde Databricks.
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC ## 6. Mensaje clave
+# MAGIC
+# MAGIC Excel sigue vivo.
+# MAGIC
+# MAGIC La diferencia es que ahora puede estar conectado a datos gobernados en Unity Catalog.
+# MAGIC
+# MAGIC Menos exports.
+# MAGIC Menos copias manuales.
+# MAGIC Menos versiones raras del mismo dato.
+# MAGIC
+# MAGIC Más governance.
