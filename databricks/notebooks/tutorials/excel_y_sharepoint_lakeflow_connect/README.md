@@ -30,19 +30,6 @@ La idea es simple: **dejar de exportar Excel a CSV**, dejar de bajar archivos �
 
 ---
 
-## Paso 0 — Activar features (o hasta que llegue como GA)
-
-En las workspaces que no sean del Databricks Free estas features aparecen como “Previews” y se activan desde el panel de configuración/preview:
-
-📸 Se veran como lo siguiente:
-- Excel File Format Support:  
-  ![Excel File Format Support](../../../../src/media/01_excel_file_format_support.png)
-
-- (Opcional) Lakeflow Connect para SharePoint:  
-  ![Lakeflow Connect for SharePoint](../../../../src/media/02_lakeflow_connect_sharepoint.png)
-
----
-
 ## Paso 1 — (Opcional) Identificar el Site ID de SharePoint
 
 Dependiendo del setup, es común necesitar el identificador del sitio (Site ID).  
