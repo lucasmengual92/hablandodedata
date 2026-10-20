@@ -4,16 +4,20 @@ Demo de **Hablando De Data** en Databricks sobre la relación entre la clasifica
 
 ## Qué incluye
 
-- Notebook: [decision_models_vs_classification_demo.ipynb](decision_models_vs_classification_demo.ipynb)
+- Notebook: [decision_models_vs_classification_demo.py](decision_models_vs_classification_demo.py)
 - Clasificación de documentos sintéticos en español e inglés: **factura / contrato / incidencia**
 - **ML clásico** con TF-IDF + Logistic Regression y `predict_proba()`
 - **Databricks `ai_decide()`**, opcional: `choice`, `noul` y `score` en una consulta SQL
 - Comparación de outputs, consideraciones de coste y checklist para producción
 
+## Formato del notebook
+
+El tutorial utiliza el formato **Databricks Source Notebook** (`.py`) con `# Databricks notebook source`, `# MAGIC %md`, `# DBTITLE` y `# COMMAND ----------`. Esto permite visualizar las celdas como un notebook en Databricks y revisar el código fácilmente en GitHub.
+
 ## Cómo ejecutarlo en Databricks
 
 1. Conecta este repositorio desde **Workspace → Git folders → Add Git folder** con `https://github.com/lucasmengual92/hablandodedata` o importa directamente el notebook.
-2. Abre `databricks/notebooks/tutorials/decision_models_vs_classification/decision_models_vs_classification_demo.ipynb`.
+2. Abre `databricks/notebooks/tutorials/decision_models_vs_classification/decision_models_vs_classification_demo.py`.
 3. Utiliza Python con `pandas` y `scikit-learn` (si no están instalados, añade una celda con `%pip install pandas scikit-learn`).
 4. Ejecuta las celdas con **`RUN_AI_DECIDE = False`** (valor predeterminado). Esta parte funciona sin Spark, UC, credenciales ni llamadas a modelos.
 5. Para probar Databricks **`ai_decide()`** cambia `RUN_AI_DECIDE = True`, verifica la disponibilidad en tu región/compute y ejecuta la celda opcional. **Puede generar coste.**
